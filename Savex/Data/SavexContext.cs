@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Savex.Models.User;
+using Savex.Models.Expenses;
 
     public class SavexContext : DbContext
     {
@@ -17,4 +18,8 @@ using Savex.Models.User;
         public DbSet<AccountRole> AccountRole { get; set; }
 
         public DbSet<Role> Role { get; set; }
+
+        public DbSet<Savex.Models.Expenses.Expense> Expense { get; set; }
+
+        public DbSet<Savex.Models.Expenses.ExpenseType> ExpenseType { get; set; }
     }

@@ -26,7 +26,7 @@ namespace Savex.Controllers
 
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string userId)
         {
             return View();
         }
@@ -63,6 +63,12 @@ namespace Savex.Controllers
                 ViewBag.Message = "error";
                 return View();
             }
+        }
+
+        public IActionResult SignOut()
+        {
+            Response.Cookies.Delete(SessionKey);
+            return RedirectToAction(nameof(SignIn));
         }
 
         public IActionResult Privacy()
