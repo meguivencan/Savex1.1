@@ -16,6 +16,25 @@
                     <form asp-action="SignIn">
                         <input asp-for="Username" class="input is-large" type="text" required placeholder="Please insert your username..." />
                         <input asp-for="Password" class="input is-large" type="password" required placeholder="Please insert your password..." />
+                        <div>
+                            <label id="lblName" style="color:crimson"></label>
+
+                            @if (ViewBag.Message == "error")
+                            {
+                                <script>
+                                    document.getElementById('lblName').innerHTML = 'Username or Password is incorrect.';
+                                </script>
+
+                            }
+                            else
+                            {
+
+                                <script>
+                                    document.getElementById('lblName').innerHTML = '';
+                                </script>
+                            }
+                        </div>
+
                         <button type="submit" class="button is-primary is-large is-fullwidth">Sign In</button>
                         <a asp-action="ForgetPassword">I forgot my password</a>
                     </form>
