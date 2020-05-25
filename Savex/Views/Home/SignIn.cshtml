@@ -1,0 +1,25 @@
+﻿@{
+    Layout = null;
+}
+
+@model Savex.Models.User.Account
+<link href="~/lib/bulma-0.8.2/css/bulma.css" rel="stylesheet" />
+
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="container">
+        <div class="columns is-mobile">
+            <div class="column is-three-fifths is-offset-one-fifth">
+                <h1 class="title is-1 has-text-black">Savex</h1>
+                <div class="box">
+                    <form asp-action="SignIn">
+                        <input asp-for="Username" class="input is-large" type="text" required placeholder="Please insert your username..." />
+                        <input asp-for="Password" class="input is-large" type="password" required placeholder="Please insert your password..." />
+                        <button type="submit" class="button is-primary is-large is-fullwidth">Sign In</button>
+                        <a asp-action="ForgetPassword">I forgot my password</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
