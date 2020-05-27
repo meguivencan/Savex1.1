@@ -28,6 +28,9 @@ namespace Savex
 
             services.AddDbContext<SavexContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("SavexContext")));
+
+            services.AddDistributedMemoryCache();
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,7 +51,7 @@ namespace Savex
 
             app.UseRouting();
             app.UseAuthentication();
-
+            app.UseSession();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

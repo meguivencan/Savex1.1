@@ -6,6 +6,9 @@
     double amountsubtotal = 0;
     double expenseamountsubtotal = 0;
     double soonamountsubtotal = 0;
+    string username = ViewBag.Username;
+    double expensesubtotal = 0;
+
 
 }
 
@@ -48,7 +51,8 @@
         </div>
         <div class="col">
             <h1>
-                ₱@Model.Sum(m => m.Amount)
+                @{ expensesubtotal = expenseamountsubtotal + soonamountsubtotal;}
+                ₱@expensesubtotal
             </h1>
         </div>
     </div>
@@ -137,7 +141,7 @@
         </div>
         <div class="col">
             <h3>
-               @amountsubtotal
+                @amountsubtotal
             </h3>
         </div>
     </div>

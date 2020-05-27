@@ -2,23 +2,25 @@
 @{
     double subtotalincome = 0;
     double subtotalexpense = 0;
-
+    string username = ViewBag.Username;
 }
 
 @model Savex.Models.DashBoards.DashBoard
 
 
-
+<h1>
+    Hello @username
+</h1>
 <div class="container">
-    <table class="table">
+    <table class="table border">
         <thead>
             <tr>
                 <th>
-                    <h4>Total Income</h4>
+                    <h4>Your Existing Money</h4>
                 </th>
                 <th>
                     <h4>
-                        Soon To Be Expenses
+                        Your Future Expenses
                     </h4>
                 </th>
                 <th>

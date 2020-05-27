@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,9 @@ namespace Savex.Controllers
         // GET: Expenses
         public async Task<IActionResult> Index()
         {
+            ViewBag.Username = HttpContext.Session.GetString("Username");
+
+
             var savexContext = _context.Expense.Include(e => e.Account).Include(e => e.ExpenseType);
             return View(await savexContext.ToListAsync());
         }

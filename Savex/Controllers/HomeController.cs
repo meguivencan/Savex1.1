@@ -29,14 +29,29 @@ namespace Savex.Controllers
 
         public IActionResult Index()
         {
-            var expenses = _context.Expense.Include(e => e.Account).Include(e => e.ExpenseType);
-            var incomes = _context.Income.Include(i => i.CashLocation).Include(i => i.IncomeType);
+            if(HttpContext.Session.GetString("Username") != null)
+            {
 
-            DashBoard dashBoard = new DashBoard();
-            dashBoard.TotalExpenses = expenses;
-            dashBoard.TotalIncomes = incomes;
+                var expenses = _context.Expense
+                    .Include(e => e.Account)
+                    .Include(e => e.ExpenseType);
+                var incomes = _context.Income.Include(i => i.CashLocation).Include(i => i.IncomeType);
 
-            return View(dashBoard);
+                DashBoard dashBoard = new DashBoard();
+                dashBoard.TotalExpenses = expenses;
+                dashBoard.TotalIncomes = incomes;
+
+
+
+                return View(dashBoard);
+
+
+            }
+            else
+            {
+                return RedirectToAction(nameof(SignIn));
+            }
+           
         }
 
         public IActionResult SignIn()
@@ -54,14 +69,11 @@ namespace Savex.Controllers
 
                 if (account != null)
                 {
-                    ViewData["InvalidUsernamePassword"] = false;
-                    Response.Cookies.Append(SessionKey, "loggedin", new CookieOptions() { Expires = DateTime.Now.AddMinutes(5) });
-                    ViewBag.Message = "";
+                    HttpContext.Session.SetString("Username", username);
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    ViewData["InvalidUsernamePassword"] = true;
                     ViewBag.Message = "error";
                     return View();
                 }
@@ -75,7 +87,7 @@ namespace Savex.Controllers
 
         public IActionResult SignOut()
         {
-            Response.Cookies.Delete(SessionKey);
+            HttpContext.Session.Clear();
             return RedirectToAction(nameof(SignIn));
         }
 
