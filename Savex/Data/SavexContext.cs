@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Savex.Models.User;
 using Savex.Models.Expenses;
+using Savex.Models.Incomes;
 
-    public class SavexContext : DbContext
+public class SavexContext : DbContext
     {
         public SavexContext (DbContextOptions<SavexContext> options)
             : base(options)
@@ -19,7 +20,13 @@ using Savex.Models.Expenses;
 
         public DbSet<Role> Role { get; set; }
 
-        public DbSet<Savex.Models.Expenses.Expense> Expense { get; set; }
+        public DbSet<Expense> Expense { get; set; }
 
-        public DbSet<Savex.Models.Expenses.ExpenseType> ExpenseType { get; set; }
+        public DbSet<ExpenseType> ExpenseType { get; set; }
+
+        public DbSet<CashLocation> CashLocation { get; set; }
+
+        public DbSet<IncomeType> IncomeType { get; set; }
+
+        public DbSet<Income> Income { get; set; }
     }

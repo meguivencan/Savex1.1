@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Savex.Models.Expenses;
 
-namespace Savex.Controllers.Expenses
+namespace Savex.Controllers
 {
     public class ExpensesController : Controller
     {
@@ -21,9 +21,16 @@ namespace Savex.Controllers.Expenses
         // GET: Expenses
         public async Task<IActionResult> Index()
         {
-            var savexContext = _context.Expense.Include(e => e.ExpenseType);
+            var savexContext = _context.Expense.Include(e => e.Account).Include(e => e.ExpenseType);
             return View(await savexContext.ToListAsync());
         }
+
+        public async Task<IActionResult> SoonToBuy()
+        {
+            var savexContext = _context.Expense.Include(e => e.Account).Include(e => e.ExpenseType);
+            return View(await savexContext.ToListAsync());
+        }
+
 
         // GET: Expenses/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -34,6 +41,7 @@ namespace Savex.Controllers.Expenses
             }
 
             var expense = await _context.Expense
+                .Include(e => e.Account)
                 .Include(e => e.ExpenseType)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (expense == null)
@@ -47,7 +55,9 @@ namespace Savex.Controllers.Expenses
         // GET: Expenses/Create
         public IActionResult Create()
         {
-            ViewData["ExpenseTypeId"] = new SelectList(_context.Set<ExpenseType>(), "Id", "ExpenseTypeName");
+            ViewData["AccountId"] = new SelectList(_context.Account, "Id", "Id");
+            ViewData["ExpenseTypeId"] = new SelectList(_context.ExpenseType, "Id", "ExpenseTypeName");
+
             return View();
         }
 
@@ -56,7 +66,7 @@ namespace Savex.Controllers.Expenses
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Amount,ExpenseTypeId,AccountrId,Date,Comment")] Expense expense)
+        public async Task<IActionResult> Create([Bind("Id,Amount,ExpenseTypeId,AccountId,Date,Comment,Title,Status,SoonToBuy,PriorityLevel")] Expense expense)
         {
             if (ModelState.IsValid)
             {
@@ -64,9 +74,11 @@ namespace Savex.Controllers.Expenses
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ExpenseTypeId"] = new SelectList(_context.Set<ExpenseType>(), "Id", "ExpenseTypeName", expense.ExpenseTypeId);
+            ViewData["AccountId"] = new SelectList(_context.Account, "Id", "Id", expense.AccountId);
+            ViewData["ExpenseTypeId"] = new SelectList(_context.ExpenseType, "Id", "ExpenseTypeName", expense.ExpenseTypeId);
             return View(expense);
         }
+
 
         // GET: Expenses/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -81,7 +93,8 @@ namespace Savex.Controllers.Expenses
             {
                 return NotFound();
             }
-            ViewData["ExpenseTypeId"] = new SelectList(_context.Set<ExpenseType>(), "Id", "ExpenseTypeName", expense.ExpenseTypeId);
+            ViewData["AccountId"] = new SelectList(_context.Account, "Id", "Id", expense.AccountId);
+            ViewData["ExpenseTypeId"] = new SelectList(_context.ExpenseType, "Id", "ExpenseTypeName", expense.ExpenseTypeId);
             return View(expense);
         }
 
@@ -90,7 +103,7 @@ namespace Savex.Controllers.Expenses
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Amount,ExpenseTypeId,AccountrId,Date,Comment")] Expense expense)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Amount,ExpenseTypeId,AccountId,Date,Comment")] Expense expense)
         {
             if (id != expense.Id)
             {
@@ -117,7 +130,8 @@ namespace Savex.Controllers.Expenses
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ExpenseTypeId"] = new SelectList(_context.Set<ExpenseType>(), "Id", "ExpenseTypeName", expense.ExpenseTypeId);
+            ViewData["AccountId"] = new SelectList(_context.Account, "Id", "Id", expense.AccountId);
+            ViewData["ExpenseTypeId"] = new SelectList(_context.ExpenseType, "Id", "ExpenseTypeName", expense.ExpenseTypeId);
             return View(expense);
         }
 
@@ -130,6 +144,7 @@ namespace Savex.Controllers.Expenses
             }
 
             var expense = await _context.Expense
+                .Include(e => e.Account)
                 .Include(e => e.ExpenseType)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (expense == null)

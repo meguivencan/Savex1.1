@@ -1,58 +1,13 @@
 ﻿@model IEnumerable<Savex.Models.Expenses.Expense>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Soon To Buys";
     var subtotal = 0;
     double amountsubtotal = 0;
-    double expenseamountsubtotal = 0;
-    double soonamountsubtotal = 0;
 
 }
 
-<h1>Index</h1>
-
-<div class="container border">
-    <div class="row">
-        <div class="col">
-            <h3>Total Spend Amount:</h3>
-        </div>
-        <div class="col">
-            @foreach (var expense in Model.Where(m => m.SoonToBuy == "No" && m.Status == null))
-            {
-                expenseamountsubtotal += expense.Amount;
-            }
-            <h1>
-                ₱@expenseamountsubtotal
-            </h1>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <h3>Total Soon To Buys:</h3>
-        </div>
-        <div class="col">
-            @foreach (var expense in Model.Where(m => m.SoonToBuy == "Yes" && m.Status == null))
-            {
-                soonamountsubtotal += expense.Amount;
-            }
-            <h1>
-                ₱@soonamountsubtotal
-            </h1>
-        </div>
-    </div>
-    <hr />
-
-    <div class="row">
-        <div class="col">
-            <h3>Initial Expenses:</h3>
-        </div>
-        <div class="col">
-            <h1>
-                ₱@Model.Sum(m => m.Amount)
-            </h1>
-        </div>
-    </div>
-</div>
+<h1>Soon To Buys</h1>
 
 <p>
     <a class="btn btn-primary" asp-action="Create">Create New</a>
@@ -61,7 +16,7 @@
     <a class="btn btn-secondary" asp-controller="ExpenseTypes" asp-action="Index">Add New Expense Type</a>
 </p>
 <p>
-    <a class="btn btn-info" asp-controller="Expenses" asp-action="SoonToBuy">View Soon To Buys</a>
+    <a class="btn btn-info" asp-controller="Expenses" asp-action="Index">View Actual Expenses</a>
 </p>
 <table class="table">
     <thead>
@@ -92,7 +47,7 @@
     </thead>
     <tbody>
 
-        @foreach (var item in Model.Where(m => m.SoonToBuy == "No" && m.Status == null))
+        @foreach (var item in Model.Where(m => m.SoonToBuy == "Yes" && m.Status == null))
         {
             <tr>
                 <td>
@@ -132,12 +87,12 @@
     <div class="row">
         <div class="col">
             <h3>
-                Total Amount Spend:
+                Total amount Will be spend:
             </h3>
         </div>
         <div class="col">
             <h3>
-               @amountsubtotal
+                ₱@amountsubtotal
             </h3>
         </div>
     </div>

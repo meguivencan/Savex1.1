@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Savex.Models;
+using Savex.Models.DashBoards;
 using Savex.Models.User;
 
 namespace Savex.Controllers
@@ -26,9 +27,16 @@ namespace Savex.Controllers
 
         }
 
-        public IActionResult Index(string userId)
+        public IActionResult Index()
         {
-            return View();
+            var expenses = _context.Expense.Include(e => e.Account).Include(e => e.ExpenseType);
+            var incomes = _context.Income.Include(i => i.CashLocation).Include(i => i.IncomeType);
+
+            DashBoard dashBoard = new DashBoard();
+            dashBoard.TotalExpenses = expenses;
+            dashBoard.TotalIncomes = incomes;
+
+            return View(dashBoard);
         }
 
         public IActionResult SignIn()
@@ -38,11 +46,11 @@ namespace Savex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SignIn([Bind("Username,Password")] Account loginInfo, string username)
+        public async Task<IActionResult> SignIn([Bind("Username,Password")] Account loginInfo, string username, string password)
         {
             try
             {
-                var account = await _context.Account.Include(p => p.AccountRoles).FirstOrDefaultAsync(p => p.Username == username);
+                var account = await _context.Account.Include(p => p.AccountRoles).FirstOrDefaultAsync(p => p.Username == username && p.Password == password);
 
                 if (account != null)
                 {

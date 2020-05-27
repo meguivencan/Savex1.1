@@ -3,14 +3,16 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Savex.Migrations
 {
     [DbContext(typeof(SavexContext))]
-    partial class SavexContextModelSnapshot : ModelSnapshot
+    [Migration("20200525052001_AddIdInAccount3")]
+    partial class AddIdInAccount3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,7 +27,10 @@ namespace Savex.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AccountId")
+                    b.Property<int?>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AccountrId")
                         .HasColumnType("int");
 
                     b.Property<double>("Amount")
@@ -40,18 +45,6 @@ namespace Savex.Migrations
 
                     b.Property<int>("ExpenseTypeId")
                         .HasColumnType("int");
-
-                    b.Property<string>("PriorityLevel")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SoonToBuy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -79,73 +72,6 @@ namespace Savex.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ExpenseType");
-                });
-
-            modelBuilder.Entity("Savex.Models.Incomes.CashLocation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CashLocationName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CashLocation");
-                });
-
-            modelBuilder.Entity("Savex.Models.Incomes.Income", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<double>("Amount")
-                        .HasColumnType("float");
-
-                    b.Property<int>("CashLocationId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Date")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("IncomeTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CashLocationId");
-
-                    b.HasIndex("IncomeTypeId");
-
-                    b.ToTable("Income");
-                });
-
-            modelBuilder.Entity("Savex.Models.Incomes.IncomeType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("IncomeTypeName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("IncomeType");
                 });
 
             modelBuilder.Entity("Savex.Models.User.Account", b =>
@@ -228,28 +154,11 @@ namespace Savex.Migrations
                 {
                     b.HasOne("Savex.Models.User.Account", "Account")
                         .WithMany()
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AccountId");
 
                     b.HasOne("Savex.Models.Expenses.ExpenseType", "ExpenseType")
                         .WithMany("Expenses")
                         .HasForeignKey("ExpenseTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Savex.Models.Incomes.Income", b =>
-                {
-                    b.HasOne("Savex.Models.Incomes.CashLocation", "CashLocation")
-                        .WithMany("Incomes")
-                        .HasForeignKey("CashLocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Savex.Models.Incomes.IncomeType", "IncomeType")
-                        .WithMany("Income")
-                        .HasForeignKey("IncomeTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
