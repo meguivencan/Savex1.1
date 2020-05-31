@@ -22,16 +22,30 @@ namespace Savex.Controllers
         // GET: Expenses
         public async Task<IActionResult> Index()
         {
+
             ViewBag.Username = HttpContext.Session.GetString("Username");
+            string uname = ViewBag.Username;
 
 
-            var savexContext = _context.Expense.Include(e => e.Account).Include(e => e.ExpenseType);
+            var savexContext = _context.Expense
+                .Include(e => e.Account)
+                .Include(e => e.ExpenseType)
+                .Where(e => e.Account.Username == uname);
+
+
             return View(await savexContext.ToListAsync());
         }
 
         public async Task<IActionResult> SoonToBuy()
         {
-            var savexContext = _context.Expense.Include(e => e.Account).Include(e => e.ExpenseType);
+            ViewBag.Username = HttpContext.Session.GetString("Username");
+            string uname = ViewBag.Username;
+
+            var savexContext = _context.Expense
+                .Include(e => e.Account)
+                .Include(e => e.ExpenseType)
+                .Where(e => e.Account.Username == uname);
+
             return View(await savexContext.ToListAsync());
         }
 
@@ -48,6 +62,8 @@ namespace Savex.Controllers
                 .Include(e => e.Account)
                 .Include(e => e.ExpenseType)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+
             if (expense == null)
             {
                 return NotFound();
@@ -59,7 +75,7 @@ namespace Savex.Controllers
         // GET: Expenses/Create
         public IActionResult Create()
         {
-            ViewData["AccountId"] = new SelectList(_context.Account, "Id", "Id");
+            ViewData["AccountId"] = new SelectList(_context.Account, "Id", "Username");
             ViewData["ExpenseTypeId"] = new SelectList(_context.ExpenseType, "Id", "ExpenseTypeName");
 
             return View();
@@ -107,7 +123,7 @@ namespace Savex.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Amount,ExpenseTypeId,AccountId,Date,Comment")] Expense expense)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Amount,ExpenseTypeId,AccountId,Date,Comment,Title,Status,SoonToBuy,PriorityLevel")] Expense expense)
         {
             if (id != expense.Id)
             {

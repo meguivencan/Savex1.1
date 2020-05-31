@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,14 @@ namespace Savex.Controllers.Incomes
         // GET: Incomes
         public async Task<IActionResult> Index()
         {
-            var savexContext = _context.Income.Include(i => i.CashLocation).Include(i => i.IncomeType);
+            ViewBag.Username = HttpContext.Session.GetString("Username");
+            string uname = ViewBag.Username;
+
+
+            var savexContext = _context.Income
+                .Include(i => i.CashLocation)
+                .Include(i => i.IncomeType)
+                .Where(i => i.Account.Username == uname);
             return View(await savexContext.ToListAsync());
         }
 
@@ -50,6 +58,7 @@ namespace Savex.Controllers.Incomes
         {
             ViewData["CashLocationId"] = new SelectList(_context.CashLocation, "Id", "CashLocationName");
             ViewData["IncomeTypeId"] = new SelectList(_context.IncomeType, "Id", "IncomeTypeName");
+            ViewData["AccountId"] = new SelectList(_context.Account, "Id", "Username");
             return View();
         }
 
@@ -58,7 +67,7 @@ namespace Savex.Controllers.Incomes
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Amount,IncomeTypeId,Date,Comment,Status,CashLocationId")] Income income)
+        public async Task<IActionResult> Create([Bind("Id,Title,Amount,IncomeTypeId,Date,Comment,Status,CashLocationId,AccountId")] Income income)
         {
             if (ModelState.IsValid)
             {
@@ -68,6 +77,8 @@ namespace Savex.Controllers.Incomes
             }
             ViewData["CashLocationId"] = new SelectList(_context.CashLocation, "Id", "Id", income.CashLocationId);
             ViewData["IncomeTypeId"] = new SelectList(_context.IncomeType, "Id", "Id", income.IncomeTypeId);
+            ViewData["AccountId"] = new SelectList(_context.Account, "Id", "Username");
+
             return View(income);
         }
 
@@ -86,6 +97,8 @@ namespace Savex.Controllers.Incomes
             }
             ViewData["CashLocationId"] = new SelectList(_context.CashLocation, "Id", "Id", income.CashLocationId);
             ViewData["IncomeTypeId"] = new SelectList(_context.IncomeType, "Id", "Id", income.IncomeTypeId);
+            ViewData["AccountId"] = new SelectList(_context.Account, "Id", "Username");
+
             return View(income);
         }
 
@@ -123,6 +136,8 @@ namespace Savex.Controllers.Incomes
             }
             ViewData["CashLocationId"] = new SelectList(_context.CashLocation, "Id", "Id", income.CashLocationId);
             ViewData["IncomeTypeId"] = new SelectList(_context.IncomeType, "Id", "Id", income.IncomeTypeId);
+            ViewData["AccountId"] = new SelectList(_context.Account, "Id", "Username");
+
             return View(income);
         }
 

@@ -21,7 +21,8 @@ namespace Savex.Controllers.User
         // GET: Accounts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Account.ToListAsync());
+            var savexContext = _context.Account;
+            return View(await savexContext.ToListAsync());
         }
 
         // GET: Accounts/Details/5
@@ -33,6 +34,7 @@ namespace Savex.Controllers.User
             }
 
             var account = await _context.Account
+                .Include(a => a.AccountRole)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (account == null)
             {
@@ -45,6 +47,7 @@ namespace Savex.Controllers.User
         // GET: Accounts/Create
         public IActionResult Create()
         {
+            ViewData["AccountRoleId"] = new SelectList(_context.AccountRole, "Id", "AccountRoleName");
             return View();
         }
 
@@ -53,14 +56,15 @@ namespace Savex.Controllers.User
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Username,FirstName,LastName,Email,Password,IsActive,IsLockedOut")] Account account)
+        public async Task<IActionResult> Create([Bind("Id,Username,FirstName,LastName,Email,Password,ConfirmPassword,SecurityQuestion,SecurityQuestionAnswer,IsActive,IsLockedOut,AccountRoleId")] Account account)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(account);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("SignIn", "Home");
             }
+            ViewData["AccountRoleId"] = new SelectList(_context.AccountRole, "Id", "Id", account.AccountRoleId);
             return View(account);
         }
 
@@ -77,6 +81,7 @@ namespace Savex.Controllers.User
             {
                 return NotFound();
             }
+            ViewData["AccountRoleId"] = new SelectList(_context.AccountRole, "Id", "AccountRoleName", account.AccountRoleId);
             return View(account);
         }
 
@@ -85,7 +90,7 @@ namespace Savex.Controllers.User
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Username,FirstName,LastName,Email,Password,IsActive,IsLockedOut")] Account account)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Username,FirstName,LastName,Email,Password,ConfirmPassword,SecurityQuestion,SecurityQuestionAnswer,IsActive,IsLockedOut,AccountRoleId")] Account account)
         {
             if (id != account.Id)
             {
@@ -112,6 +117,7 @@ namespace Savex.Controllers.User
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["AccountRoleId"] = new SelectList(_context.AccountRole, "Id", "Id", account.AccountRoleId);
             return View(account);
         }
 
@@ -124,6 +130,7 @@ namespace Savex.Controllers.User
             }
 
             var account = await _context.Account
+                .Include(a => a.AccountRole)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (account == null)
             {

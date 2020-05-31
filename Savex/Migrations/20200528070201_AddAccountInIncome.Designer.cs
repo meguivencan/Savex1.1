@@ -3,14 +3,16 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Savex.Migrations
 {
     [DbContext(typeof(SavexContext))]
-    partial class SavexContextModelSnapshot : ModelSnapshot
+    [Migration("20200528070201_AddAccountInIncome")]
+    partial class AddAccountInIncome
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -160,18 +162,10 @@ namespace Savex.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AccountRoleId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConfirmPassword")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool?>("IsActive")
@@ -181,28 +175,15 @@ namespace Savex.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SecurityQuestion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SecurityQuestionAnswer")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccountRoleId");
 
                     b.ToTable("Account");
                 });
@@ -214,12 +195,40 @@ namespace Savex.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AccountRoleName")
+                    b.Property<string>("AccountId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("AccountId1")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId1");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AccountRole");
+                });
+
+            modelBuilder.Entity("Savex.Models.User.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("AccountRole");
+                    b.ToTable("Role");
                 });
 
             modelBuilder.Entity("Savex.Models.Expenses.Expense", b =>
@@ -258,11 +267,17 @@ namespace Savex.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Savex.Models.User.Account", b =>
+            modelBuilder.Entity("Savex.Models.User.AccountRole", b =>
                 {
-                    b.HasOne("Savex.Models.User.AccountRole", "AccountRole")
-                        .WithMany("Accounts")
-                        .HasForeignKey("AccountRoleId");
+                    b.HasOne("Savex.Models.User.Account", "Account")
+                        .WithMany("AccountRoles")
+                        .HasForeignKey("AccountId1");
+
+                    b.HasOne("Savex.Models.User.Role", "Role")
+                        .WithMany("AccountRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

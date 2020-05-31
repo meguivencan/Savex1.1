@@ -2,6 +2,7 @@
 @{
     double subtotalincome = 0;
     double subtotalexpense = 0;
+    double subtotalpartialexpense = 0;
     string username = ViewBag.Username;
 }
 
@@ -20,6 +21,11 @@
                 </th>
                 <th>
                     <h4>
+                        Total Expenses
+                    </h4>
+                </th>
+                <th>
+                    <h4>
                         Your Future Expenses
                     </h4>
                 </th>
@@ -28,10 +34,20 @@
                         Potential Savings
                     </h4>
                 </th>
+                <th>
+                    <h4>
+                        Current Savings
+                    </h4>
+                </th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.TotalExpenses.Where(m => m.SoonToBuy == "Yes" && m.Status == null))
+            @foreach (var item in Model.TotalExpenses.Where(m => m.SoonToBuy == "Yes"))
+            {
+
+                subtotalpartialexpense += item.Amount;
+            }
+            @foreach (var item in Model.TotalExpenses.Where(m => m.SoonToBuy == "No"))
             {
 
                 subtotalexpense += item.Amount;
@@ -44,20 +60,34 @@
             <tr>
                 <td>
                     <h3>
-                        @subtotalincome
+                        @String.Format("{0:c}", subtotalincome)
+
                     </h3>
                 </td>
                 <td>
                     <h3>
-                        @subtotalexpense
+                        @String.Format("{0:c}", subtotalexpense)
                     </h3>
                 </td>
                 <td>
+                    <h3>
+                        @String.Format("{0:c}", subtotalpartialexpense)
+                    </h3>
+                </td>
+                <td class="btn-secondary">
                     <h3>
                         @{
-                            double difference = subtotalincome - subtotalexpense;
+                            double currentexpensedifference = subtotalincome - subtotalexpense;
                         }
-                        @difference
+                        @{
+                            double partialexpensedifference = currentexpensedifference - subtotalpartialexpense;
+                        }
+                        @String.Format("{0:c}", partialexpensedifference)
+                    </h3>
+                </td>
+                <td class="btn-primary">
+                    <h3>
+                        @String.Format("{0:c}", currentexpensedifference)
                     </h3>
                 </td>
             </tr>

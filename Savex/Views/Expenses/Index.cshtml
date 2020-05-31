@@ -20,7 +20,7 @@
             <h3>Total Spend Amount:</h3>
         </div>
         <div class="col">
-            @foreach (var expense in Model.Where(m => m.SoonToBuy == "No" && m.Status == null))
+            @foreach (var expense in Model.Where(m => m.SoonToBuy == "No"))
             {
                 expenseamountsubtotal += expense.Amount;
             }
@@ -34,7 +34,7 @@
             <h3>Total Soon To Buys:</h3>
         </div>
         <div class="col">
-            @foreach (var expense in Model.Where(m => m.SoonToBuy == "Yes" && m.Status == null))
+            @foreach (var expense in Model.Where(m => m.SoonToBuy == "Yes"))
             {
                 soonamountsubtotal += expense.Amount;
             }
@@ -96,7 +96,7 @@
     </thead>
     <tbody>
 
-        @foreach (var item in Model.Where(m => m.SoonToBuy == "No" && m.Status == null))
+        @foreach (var item in Model.Where(m => m.SoonToBuy == "No"))
         {
             <tr>
                 <td>

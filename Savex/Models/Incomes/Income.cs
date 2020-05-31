@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Savex.Models.User;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ namespace Savex.Models.Incomes
         public double Amount { get; set; }
         public int IncomeTypeId { get; set; }
         public IncomeType IncomeType { get; set; }
+        public int AccountId { get; set; }
+        public Account Account { get; set; }
         public string Date { get; set; }
         public string Comment { get; set; }
         public string Status { get; set; }

@@ -8,11 +8,16 @@
 
 <h4>Expense</h4>
 <hr />
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Amount" class="control-label"></label>
                 <input asp-for="Amount" class="form-control" />
@@ -21,17 +26,47 @@
             <div class="form-group">
                 <label asp-for="ExpenseTypeId" class="control-label"></label>
                 <select asp-for="ExpenseTypeId" class="form-control" asp-items="ViewBag.ExpenseTypeId"></select>
-                <span asp-validation-for="ExpenseTypeId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="AccountId" class="control-label"></label>
                 <select asp-for="AccountId" class="form-control" asp-items="ViewBag.AccountId"></select>
-                <span asp-validation-for="AccountId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" />
+                <input type="date" asp-for="Date" class="form-control" />
                 <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PriorityLevel" class="control-label"></label>
+                @Html.DropDownListFor(model => model.PriorityLevel, new List<SelectListItem>
+           {
+              new SelectListItem{ Text="1 - Very Important", Value = "1" },
+              new SelectListItem{ Text="2 - Important", Value = "2" },
+              new SelectListItem{ Text="3 - Neutral", Value = "3" },
+              new SelectListItem{ Text="4 - Slightly Not Important", Value = "4" },
+              new SelectListItem{ Text="5 - Not Important", Value = "5" },
+           }, new { @class = "form-control" })
+                @*<select asp-for="PriorityLevel" class="form-control">
+                <option selected="selected" value="1">1 - Important</option>
+                <option value="2">2 - Slightly important</option>
+                <option value="3">3 - Neutral </option>
+                <option value="4">4 - Slighly not important</option>
+                <option value="5">5 - Not important</option>
+            </select>*@
+            </div>
+            <div class="form-group">
+                <label asp-for="SoonToBuy" class="control-label"></label>
+                <span asp-validation-for="SoonToBuy" class="text-danger"></span>
+                @Html.DropDownListFor(model => model.SoonToBuy, new List<SelectListItem>
+            {
+               new SelectListItem{ Text="No", Value = "No" },
+               new SelectListItem{ Text="Yes", Value = "Yes" },
+            }, new { @class = "form-control" })
+                @*<select asp-for="SoonToBuy" class="form-control">
+                <option selected="selected" value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>*@
+
             </div>
             <div class="form-group">
                 <label asp-for="Comment" class="control-label"></label>

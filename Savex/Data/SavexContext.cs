@@ -18,8 +18,6 @@ public class SavexContext : DbContext
 
         public DbSet<AccountRole> AccountRole { get; set; }
 
-        public DbSet<Role> Role { get; set; }
-
         public DbSet<Expense> Expense { get; set; }
 
         public DbSet<ExpenseType> ExpenseType { get; set; }

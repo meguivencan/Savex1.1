@@ -31,11 +31,20 @@ namespace Savex.Controllers
         {
             if(HttpContext.Session.GetString("Username") != null)
             {
+                ViewBag.Username = HttpContext.Session.GetString("Username");
+
+                string uname = ViewBag.Username;
 
                 var expenses = _context.Expense
                     .Include(e => e.Account)
-                    .Include(e => e.ExpenseType);
-                var incomes = _context.Income.Include(i => i.CashLocation).Include(i => i.IncomeType);
+                    .Include(e => e.ExpenseType)
+                    .Where(e => e.Account.Username == uname);
+
+
+                var incomes = _context.Income
+                    .Include(i => i.CashLocation)
+                    .Include(i => i.IncomeType)
+                    .Where(e => e.Account.Username == uname);
 
                 DashBoard dashBoard = new DashBoard();
                 dashBoard.TotalExpenses = expenses;
@@ -65,7 +74,9 @@ namespace Savex.Controllers
         {
             try
             {
-                var account = await _context.Account.Include(p => p.AccountRoles).FirstOrDefaultAsync(p => p.Username == username && p.Password == password);
+                
+                var account = await _context.Account.Where(p => p.Username == username && p.Password == password).FirstOrDefaultAsync();
+
 
                 if (account != null)
                 {

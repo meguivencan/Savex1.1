@@ -21,8 +21,7 @@ namespace Savex.Controllers.User
         // GET: AccountRoles
         public async Task<IActionResult> Index()
         {
-            var savexContext = _context.AccountRole.Include(a => a.Account).Include(a => a.Role);
-            return View(await savexContext.ToListAsync());
+            return View(await _context.AccountRole.ToListAsync());
         }
 
         // GET: AccountRoles/Details/5
@@ -34,8 +33,6 @@ namespace Savex.Controllers.User
             }
 
             var accountRole = await _context.AccountRole
-                .Include(a => a.Account)
-                .Include(a => a.Role)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (accountRole == null)
             {
@@ -48,8 +45,6 @@ namespace Savex.Controllers.User
         // GET: AccountRoles/Create
         public IActionResult Create()
         {
-            ViewData["AccountId"] = new SelectList(_context.Account, "Username", "Username");
-            ViewData["RoleId"] = new SelectList(_context.Set<Role>(), "Id", "Id");
             return View();
         }
 
@@ -58,7 +53,7 @@ namespace Savex.Controllers.User
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,AccountId,RoleId")] AccountRole accountRole)
+        public async Task<IActionResult> Create([Bind("Id,AccountRoleName")] AccountRole accountRole)
         {
             if (ModelState.IsValid)
             {
@@ -66,8 +61,6 @@ namespace Savex.Controllers.User
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AccountId"] = new SelectList(_context.Account, "Username", "Username", accountRole.AccountId);
-            ViewData["RoleId"] = new SelectList(_context.Set<Role>(), "Id", "Id", accountRole.RoleId);
             return View(accountRole);
         }
 
@@ -84,8 +77,6 @@ namespace Savex.Controllers.User
             {
                 return NotFound();
             }
-            ViewData["AccountId"] = new SelectList(_context.Account, "Username", "Username", accountRole.AccountId);
-            ViewData["RoleId"] = new SelectList(_context.Set<Role>(), "Id", "Id", accountRole.RoleId);
             return View(accountRole);
         }
 
@@ -94,7 +85,7 @@ namespace Savex.Controllers.User
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountId,RoleId")] AccountRole accountRole)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountRoleName")] AccountRole accountRole)
         {
             if (id != accountRole.Id)
             {
@@ -121,8 +112,6 @@ namespace Savex.Controllers.User
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AccountId"] = new SelectList(_context.Account, "Username", "Username", accountRole.AccountId);
-            ViewData["RoleId"] = new SelectList(_context.Set<Role>(), "Id", "Id", accountRole.RoleId);
             return View(accountRole);
         }
 
@@ -135,8 +124,6 @@ namespace Savex.Controllers.User
             }
 
             var accountRole = await _context.AccountRole
-                .Include(a => a.Account)
-                .Include(a => a.Role)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (accountRole == null)
             {
