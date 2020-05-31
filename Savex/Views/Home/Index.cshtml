@@ -1,8 +1,98 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿
+@{
+    double subtotalincome = 0;
+    double subtotalexpense = 0;
+    double subtotalpartialexpense = 0;
+    string username = ViewBag.Username;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@model Savex.Models.DashBoards.DashBoard
+
+
+<h1>
+    Hello @username
+</h1>
+<div class="container">
+    <table class="table border">
+        <thead>
+            <tr>
+                <th>
+                    <h4>Your Existing Money</h4>
+                </th>
+                <th>
+                    <h4>
+                        Total Expenses
+                    </h4>
+                </th>
+                <th>
+                    <h4>
+                        Your Future Expenses
+                    </h4>
+                </th>
+                <th>
+                    <h4>
+                        Potential Savings
+                    </h4>
+                </th>
+                <th>
+                    <h4>
+                        Current Savings
+                    </h4>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.TotalExpenses.Where(m => m.SoonToBuy == "Yes"))
+            {
+
+                subtotalpartialexpense += item.Amount;
+            }
+            @foreach (var item in Model.TotalExpenses.Where(m => m.SoonToBuy == "No"))
+            {
+
+                subtotalexpense += item.Amount;
+            }
+            @foreach (var item in Model.TotalIncomes)
+            {
+
+                subtotalincome += item.Amount;
+            }
+            <tr>
+                <td>
+                    <h3>
+                        @String.Format("{0:c}", subtotalincome)
+
+                    </h3>
+                </td>
+                <td>
+                    <h3>
+                        @String.Format("{0:c}", subtotalexpense)
+                    </h3>
+                </td>
+                <td>
+                    <h3>
+                        @String.Format("{0:c}", subtotalpartialexpense)
+                    </h3>
+                </td>
+                <td class="btn-secondary">
+                    <h3>
+                        @{
+                            double currentexpensedifference = subtotalincome - subtotalexpense;
+                        }
+                        @{
+                            double partialexpensedifference = currentexpensedifference - subtotalpartialexpense;
+                        }
+                        @String.Format("{0:c}", partialexpensedifference)
+                    </h3>
+                </td>
+                <td class="btn-primary">
+                    <h3>
+                        @String.Format("{0:c}", currentexpensedifference)
+                    </h3>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h1>
+    </h1>
 </div>

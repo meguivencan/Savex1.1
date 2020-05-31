@@ -1,0 +1,148 @@
+﻿@model IEnumerable<Savex.Models.Expenses.Expense>
+
+@{
+    ViewData["Title"] = "Index";
+    var subtotal = 0;
+    double amountsubtotal = 0;
+    double expenseamountsubtotal = 0;
+    double soonamountsubtotal = 0;
+    string username = ViewBag.Username;
+    double expensesubtotal = 0;
+
+
+}
+
+<h1>Index</h1>
+
+<div class="container border">
+    <div class="row">
+        <div class="col">
+            <h3>Total Spend Amount:</h3>
+        </div>
+        <div class="col">
+            @foreach (var expense in Model.Where(m => m.SoonToBuy == "No"))
+            {
+                expenseamountsubtotal += expense.Amount;
+            }
+            <h1>
+                ₱@expenseamountsubtotal
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h3>Total Soon To Buys:</h3>
+        </div>
+        <div class="col">
+            @foreach (var expense in Model.Where(m => m.SoonToBuy == "Yes"))
+            {
+                soonamountsubtotal += expense.Amount;
+            }
+            <h1>
+                ₱@soonamountsubtotal
+            </h1>
+        </div>
+    </div>
+    <hr />
+
+    <div class="row">
+        <div class="col">
+            <h3>Initial Expenses:</h3>
+        </div>
+        <div class="col">
+            <h1>
+                @{ expensesubtotal = expenseamountsubtotal + soonamountsubtotal;}
+                ₱@expensesubtotal
+            </h1>
+        </div>
+    </div>
+</div>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Create New</a>
+</p>
+<p>
+    <a class="btn btn-secondary" asp-controller="ExpenseTypes" asp-action="Index">Add New Expense Type</a>
+</p>
+<p>
+    <a class="btn btn-info" asp-controller="Expenses" asp-action="SoonToBuy">View Soon To Buys</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <h4>Title</h4>
+            </th>
+            <th>
+                <h4>Expense Type</h4>
+            </th>
+            <th>
+                <h4>Name</h4>
+            </th>
+            <th>
+                <h4>Date</h4>
+            </th>
+            <th>
+                <h4>Comment</h4>
+            </th>
+            <th>
+                <h4>Priority Level</h4>
+            </th>
+            <th>
+                <h4>Amount</h4>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.Where(m => m.SoonToBuy == "No"))
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ExpenseType.ExpenseTypeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Account.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PriorityLevel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+            amountsubtotal += item.Amount;
+
+            subtotal++;
+        }
+    </tbody>
+</table>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h3>
+                Total Amount Spend:
+            </h3>
+        </div>
+        <div class="col">
+            <h3>
+                @amountsubtotal
+            </h3>
+        </div>
+    </div>
+</div>

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Savex.Models;
+using Savex.Models.DashBoards;
 using Savex.Models.User;
 
 namespace Savex.Controllers
@@ -28,7 +29,38 @@ namespace Savex.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            if(HttpContext.Session.GetString("Username") != null)
+            {
+                ViewBag.Username = HttpContext.Session.GetString("Username");
+
+                string uname = ViewBag.Username;
+
+                var expenses = _context.Expense
+                    .Include(e => e.Account)
+                    .Include(e => e.ExpenseType)
+                    .Where(e => e.Account.Username == uname);
+
+
+                var incomes = _context.Income
+                    .Include(i => i.CashLocation)
+                    .Include(i => i.IncomeType)
+                    .Where(e => e.Account.Username == uname);
+
+                DashBoard dashBoard = new DashBoard();
+                dashBoard.TotalExpenses = expenses;
+                dashBoard.TotalIncomes = incomes;
+
+
+
+                return View(dashBoard);
+
+
+            }
+            else
+            {
+                return RedirectToAction(nameof(SignIn));
+            }
+           
         }
 
         public IActionResult SignIn()
@@ -38,22 +70,21 @@ namespace Savex.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SignIn([Bind("Username,Password")] Account loginInfo, string username)
+        public async Task<IActionResult> SignIn([Bind("Username,Password")] Account loginInfo, string username, string password)
         {
             try
             {
-                var account = await _context.Account.Include(p => p.AccountRoles).FirstOrDefaultAsync(p => p.Username == username);
+                
+                var account = await _context.Account.Where(p => p.Username == username && p.Password == password).FirstOrDefaultAsync();
+
 
                 if (account != null)
                 {
-                    ViewData["InvalidUsernamePassword"] = false;
-                    Response.Cookies.Append(SessionKey, "loggedin", new CookieOptions() { Expires = DateTime.Now.AddMinutes(5) });
-                    ViewBag.Message = "";
+                    HttpContext.Session.SetString("Username", username);
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    ViewData["InvalidUsernamePassword"] = true;
                     ViewBag.Message = "error";
                     return View();
                 }
@@ -63,6 +94,12 @@ namespace Savex.Controllers
                 ViewBag.Message = "error";
                 return View();
             }
+        }
+
+        public IActionResult SignOut()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction(nameof(SignIn));
         }
 
         public IActionResult Privacy()

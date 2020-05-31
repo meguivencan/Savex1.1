@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Savex.Models.Expenses;
+using Savex.Models.Incomes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,16 +12,32 @@ namespace Savex.Models.User
     {
         [Key]
         public int Id { get; set; }
-        public string Username { get; private set; }
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
-        public string Email { get; private set; }
-        public string Password { get; private set; }
+        [Required]
+        public string Username { get; set; }
+        [Required]
+        public string FirstName { get; set; }
+        [Required]
+        public string LastName { get; set; }
+        [Required]
+        public string Email { get; set; }
+        [Required]
+
+        public string Password { get; set; }
+        [Compare("Password", ErrorMessage = "Confirm password doesn't match, Type again !")]
+        public string ConfirmPassword { get; set; }
+        [Required]
+
+        public string SecurityQuestion { get; set; }
+        [Required]
+
+        public string SecurityQuestionAnswer { get; set; }
         public bool? IsActive { get; private set; }
         public bool? IsLockedOut { get; private set; }
+        public int? AccountRoleId { get; set; }
+        public AccountRole AccountRole { get; set; }
 
-
-        public List<AccountRole> AccountRoles { get; set; }
+        public List<Expense> Expenses { get; set; }
+        public List<Income> Incomes { get; set; }
 
     }
 }

@@ -28,10 +28,22 @@
                 @Html.DisplayNameFor(model => model.Password)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.ConfirmPassword)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SecurityQuestion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SecurityQuestionAnswer)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.IsActive)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.IsLockedOut)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AccountRole)
             </th>
             <th></th>
         </tr>
@@ -55,10 +67,22 @@
                 @Html.DisplayFor(modelItem => item.Password)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.ConfirmPassword)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SecurityQuestion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SecurityQuestionAnswer)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.IsActive)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IsLockedOut)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccountRole.Id)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

@@ -5,26 +5,26 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Savex.Models.User;
+using Savex.Models.Incomes;
 
-namespace Savex.Controllers.User
+namespace Savex.Controllers.Incomes
 {
-    public class RolesController : Controller
+    public class CashLocationsController : Controller
     {
         private readonly SavexContext _context;
 
-        public RolesController(SavexContext context)
+        public CashLocationsController(SavexContext context)
         {
             _context = context;
         }
 
-        // GET: Roles
+        // GET: CashLocations
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Role.ToListAsync());
+            return View(await _context.CashLocation.ToListAsync());
         }
 
-        // GET: Roles/Details/5
+        // GET: CashLocations/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -32,39 +32,39 @@ namespace Savex.Controllers.User
                 return NotFound();
             }
 
-            var role = await _context.Role
+            var cashLocation = await _context.CashLocation
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (role == null)
+            if (cashLocation == null)
             {
                 return NotFound();
             }
 
-            return View(role);
+            return View(cashLocation);
         }
 
-        // GET: Roles/Create
+        // GET: CashLocations/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Roles/Create
+        // POST: CashLocations/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description")] Role role)
+        public async Task<IActionResult> Create([Bind("Id,CashLocationName")] CashLocation cashLocation)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(role);
+                _context.Add(cashLocation);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(role);
+            return View(cashLocation);
         }
 
-        // GET: Roles/Edit/5
+        // GET: CashLocations/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -72,22 +72,22 @@ namespace Savex.Controllers.User
                 return NotFound();
             }
 
-            var role = await _context.Role.FindAsync(id);
-            if (role == null)
+            var cashLocation = await _context.CashLocation.FindAsync(id);
+            if (cashLocation == null)
             {
                 return NotFound();
             }
-            return View(role);
+            return View(cashLocation);
         }
 
-        // POST: Roles/Edit/5
+        // POST: CashLocations/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] Role role)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CashLocationName")] CashLocation cashLocation)
         {
-            if (id != role.Id)
+            if (id != cashLocation.Id)
             {
                 return NotFound();
             }
@@ -96,12 +96,12 @@ namespace Savex.Controllers.User
             {
                 try
                 {
-                    _context.Update(role);
+                    _context.Update(cashLocation);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RoleExists(role.Id))
+                    if (!CashLocationExists(cashLocation.Id))
                     {
                         return NotFound();
                     }
@@ -112,10 +112,10 @@ namespace Savex.Controllers.User
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(role);
+            return View(cashLocation);
         }
 
-        // GET: Roles/Delete/5
+        // GET: CashLocations/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -123,30 +123,30 @@ namespace Savex.Controllers.User
                 return NotFound();
             }
 
-            var role = await _context.Role
+            var cashLocation = await _context.CashLocation
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (role == null)
+            if (cashLocation == null)
             {
                 return NotFound();
             }
 
-            return View(role);
+            return View(cashLocation);
         }
 
-        // POST: Roles/Delete/5
+        // POST: CashLocations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var role = await _context.Role.FindAsync(id);
-            _context.Role.Remove(role);
+            var cashLocation = await _context.CashLocation.FindAsync(id);
+            _context.CashLocation.Remove(cashLocation);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool RoleExists(int id)
+        private bool CashLocationExists(int id)
         {
-            return _context.Role.Any(e => e.Id == id);
+            return _context.CashLocation.Any(e => e.Id == id);
         }
     }
 }
